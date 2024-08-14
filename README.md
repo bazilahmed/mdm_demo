@@ -2,7 +2,7 @@ MDM Solution that is built on purely SQL on Postgresql database. Enjoy a working
 
 
 
-## SQL Scripts Details
+## SQL Scripts Overview
 
 This project contains several SQL scripts to set up and manage the Master Data Management (MDM) process. Below is a summary of each script:
 
@@ -28,7 +28,7 @@ It is recommended to execute the scripts in the following order:
 Ensure that the database schema is properly set up by running the first script before executing the stored procedures.
 
 
-### SQL Scripts Overview
+### SQL Scripts Description
 
 This project contains several SQL scripts designed to set up and manage the Master Data Management (MDM) process. Below is a summary of each script:
 
