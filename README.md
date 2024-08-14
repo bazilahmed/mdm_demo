@@ -66,7 +66,7 @@ Ensure that the database schema is properly set up by running the first script b
 
 Prerequisite: Postgresql database is installed and the server is running locally. [Download and installation details](https://www.postgresql.org/download/)
 
-_I faced a server issue on my Mac (ARM version) and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) helped me fix it. _
+_I faced a server issue on my Mac (ARM version) and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) helped me fix it._
 
 **Step 1:** Run all SQL scripts in sequence
 
