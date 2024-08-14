@@ -1,5 +1,5 @@
 A working MDM Solution that is built purely using SQL on Postgresql database. Hope it helps!
-Who is [Bazil Ahmed?](www.linkedin.com/in/bazil-ahmed)
+Who is [Bazil Ahmed](https://www.linkedin.com/in/bazil-ahmed) _(right-click and open in a new tab)_
 
 ## Data Model Summary for MDM Solution
 The Master Data Management (MDM) solution is built around a logical data model that integrates key entities such as customers, sales transactions, products, and suppliers. This mock data has been generated to serve the purpose of building a real-world MDM solution.  
@@ -64,9 +64,9 @@ Ensure that the database schema is properly set up by running the first script b
 
 ### Steps
 
-Prerequisite: Postgresql database is installed and the server is running locally. [Download and installation details](https://www.postgresql.org/download/)
+Prerequisite: Postgresql database is installed and the server is running locally. [Download and installation details](https://www.postgresql.org/download/) _(right-click and open in a new tab)_
 
-_I faced a server issue on my Mac (ARM version) and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) helped me fix it._
+I faced a server issue on my Mac (ARM version) and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) _(right-click and open in a new tab)_ helped me fix it.
 
 **Step 0:** Connect to this locally running Postgres server using any Database Management Tool of your choice. Create a database `mdm_demo` and connect to it. 
 
