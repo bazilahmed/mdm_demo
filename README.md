@@ -8,7 +8,33 @@ The ER diagram visually represents the relationships between these entities, sho
 
 ![image](https://github.com/user-attachments/assets/a4138bc6-c3ea-4c76-bc1e-72d85781b06b)
 
-Note: The solution uses only the customer and sales tables for simplicity of explanation and you will find that the code, as you analyze it, that it tends to become specific to customer and sales tables. 
+Note: The solution focuses on the customer and sales tables for simplicity, so you'll notice the code is tailored specifically to these tables.
+
+## Data Flow and MDM Process Description
+
+The Master Data Management (MDM) process for the Orders system is designed to cleanse, match, and consolidate customer and sales data to ensure a single, accurate view of customer information. The process is broken down into several key steps, each supported by specific stored procedures and data flows, as depicted in the flowchart.
+
+![image](https://github.com/user-attachments/assets/9afc55cb-e952-42ef-b5d0-c83f6bff3983)
+
+### 1. Data Import and Initial Cleansing
+- **Staging Tables**: Data is initially loaded into staging tables (`stg_customer`, `stg_product`, `stg_sales`, `stg_supplier`) using the database’s native import functionality.
+- **Cleansing Process**: The `cleanse_and_load_table` stored procedure is invoked to clean the data in the staging tables. This procedure removes unnecessary spaces, standardizes formats, and prepares the data for further processing. Cleansed data is then loaded into the corresponding production tables (`customer`, `product`, `sales`, `supplier`) with the `mdm_complete` flag set to `FALSE`.
+
+### 2. Matching Process
+- **Finding Potential Matches**: The `find_potential_matches_customer` stored procedure is executed to identify potential duplicate customer records. This process uses predefined matching rules, including exact matches and fuzzy matches, and stores the results in the `potential_matches_customer` table.
+- **Manual Review and Exclusion**: The `potential_matches_customer_vw` view provides a user-friendly interface for reviewing potential matches. If certain records are found to be incorrect matches, the `flag_to_be_merged_false` procedure can be used to flag them as `to_be_merged = FALSE`, excluding them from the merging process.
+
+### 3. Merging Process
+- **Applying Survivorship Rules**: The `run_survivorship_for_all` stored procedure iterates through all identified matches, applying survivorship rules via the `apply_survivorship_rules` procedure. These rules determine the "golden" customer record, which is then stored in the `customer_master` table.
+- **Finalizing Records**: The procedure also inserts any unmatched customer records directly into the `customer_master` table and updates the `mdm_complete` flag in the `customer` table to `TRUE` for all processed records.
+
+### 4. Post-MDM Sales Data Integration
+- **Sales Data Update**: The `populate_sales_post_mdm` stored procedure is executed to update the `sales_post_mdm` table. This procedure links the sales data to the correct customer records using the `customer_master` table. The `mdm_complete` flag in the `sales` table is then set to `TRUE` for all processed records, ensuring that they are not reprocessed in future MDM runs.
+
+---
+
+The MDM process for the Orders system involves a systematic approach to cleansing, matching, merging, and integrating customer and sales data. The flowchart provides a clear visual representation of how data moves through the system, from initial import to final consolidation in the master records. Each stored procedure plays a critical role in ensuring data accuracy and consistency, resulting in a unified and reliable view of customer information across the organization.
+
 
 ## SQL Scripts Overview
 
