@@ -1,5 +1,5 @@
 A working MDM Solution that is built purely using SQL on Postgresql database. Hope it helps!
-
+Who is [Bazil Ahmed?](www.linkedin.com/in/bazil-ahmed)
 
 ## Data Model Summary for MDM Solution
 The Master Data Management (MDM) solution is built around a logical data model that integrates key entities such as customers, sales transactions, products, and suppliers. This mock data has been generated to serve the purpose of building a real-world MDM solution.  
