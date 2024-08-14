@@ -26,3 +26,67 @@ It is recommended to execute the scripts in the following order:
 7. `07_create_sp_populate_sales_post_mdm.sql`
 
 Ensure that the database schema is properly set up by running the first script before executing the stored procedures.
+
+
+1. 01_create_tables_and_views.sql
+Purpose:
+This script is responsible for setting up the initial database schema, including the creation of all necessary tables and views for the project. Run this script first to ensure that all required database objects are created before executing any stored procedures. There were some special considerations to accommodate delta load logics and cyclic nature of MDM process. For example, almost all tables have created_date and updated_date column which is used for delta load logic. There are boolean flag columns like mdm_complete and to_be_merged added to address special scenarios and edge cases. Although only customer and sales tables are used to implement the MDM process, it should serve as an example to implement similar logic for product and supplier tables. 
+
+Contents:
+Creates tables: stg_customer, stg_product, stg_supplier, stg_sales, customer, product, supplier, sales, potential_matches_customer, customer_master, sales_post_mdm.
+Defines view potential_matches_customer_vw to facilitate the Master Data Management (MDM) process.
+
+
+2. 02_create_sp_cleanse_and_load_table.sql
+Purpose:
+This script creates a stored procedure that cleanses data in staging tables and loads it into the target tables. The procedure ensures data consistency by removing unnecessary spaces, new lines and replacing blank values with NULL values. This serves as a placeholder where additional rules for cleansing and standardization can be added.
+
+Contents:
+Creates the cleanse_and_load_table stored procedure.
+The procedure accepts staging and target table names as parameters and performs data cleansing operations before inserting the cleansed data into the target table. It also sets the default value of mdm_complete as FALSE for each entry into the cleansed table. The table names should be without the schema as the schema is already added to the stored procedure. Example: call cleanse_and_load_table('stg_customer', 'customer');
+
+
+3. 03_create_sp_find_potential_matches_customer.sql
+Purpose:
+This script creates a stored procedure that identifies potential matching customer records based on predefined matching rules. Only four rules have been defined in this procedure for the sake of simplicity. Additional rules can be added in the similar fashion. The results are stored in the potential_matches_customer table. This table servers like a cross-reference and for historcal evidence as new records keep getting added each cycle.  
+
+Contents:
+Creates the find_potential_matches_customer stored procedure.
+Implements several matching rules (e.g., exact matches, as well as fuzzy matches) to find duplicate or similar records in the customer data. As mentioned earlier, only customer table is being used as an entity table to implement MDM process. Supplier and Product can be implemented in a similar way. Example: call find_potential_matches_customer()
+
+
+4. 04_create_sp_flag_to_be_merged_false.sql
+Purpose:
+This script creates a stored procedure that flags specific records in the potential_matches_customer table as to_be_merged = FALSE, effectively excluding them from the merging process. The default value for each entry in potential_matches_customer table is set to TRUE for speed of execution, however, this stored procedure can be called to deselect some records if they are not found to be a good match based on manual review. This manual review is performed using potential_matches_customer_vw which displays within each set of records the first record as a reference record and following records as potential matches. The view has been designed to bring ease of readability and comparison to manually intervene on incorrect matches. 
+
+Contents:
+Creates the flag_to_be_merged_false stored procedure.
+The procedure accepts reference_id, matched_id, and rule_number as parameters and updates the to_be_merged flag accordingly. Example: call flag_to_be_merged_false(15, 102, 3);
+
+
+5. 05_create_sp_apply_survivorship_rules.sql
+Purpose:
+This script creates a stored procedure that applies survivorship rules to determine the "golden" customer record when merging matching records. The survivorship rules have been carefully designed per attribute to mimic real world scenarios. The final record is stored in the customer_master table after being enriched with matching records. This also covers only customer entity. Example: call apply_survivorship_rules(15);
+
+Contents:
+Creates the apply_survivorship_rules stored procedure.
+The procedure evaluates potential duplicate records, applies predefined rules, and updates or inserts the final "golden" record into the customer_master table.
+
+
+6. 06_create_sp_run_survivorship_for_all.sql
+Purpose:
+This script creates a stored procedure that iterates through all identified matching records and applies the survivorship rules to merge them. Additionally, it inserts remaining customer records that don't have any potential matches into the customer_master table. This way all merged as well as unmerged records make it to the customer_master table. It also updates the flag mdm_complete = TRUE for all the customer records in customer table so that they don't get pulled/processed again in subsequent MDM runs. 
+
+Contents:
+Creates the run_survivorship_for_all stored procedure.
+The procedure loops through all distinct reference_id values and calls the apply_survivorship_rules procedure for each one, then updates the mdm_complete flag.
+Execute this procedure to perform a full MDM cycle, applying survivorship rules across all potential duplicates.
+
+
+7. 07_create_sp_populate_sales_post_mdm.sql
+Purpose:
+This script creates a stored procedure that populates or updates the sales_post_mdm table by linking sales data to the correct customer records after the MDM process. It also updates the mdm_complete flag in the sales table. Earlier just the 'customer' table was being dealt with as an entity. Ultimately, the transaction tables have to reflect this change and use the enriched master data, therefore, this stored procedure updates sales_post_mdm table with correct references to enriched master customer data. Example: call populate_sales_post_mdm();
+
+Contents:
+Creates the populate_sales_post_mdm stored procedure.
+The procedure inserts or updates records in the sales_post_mdm table and marks the corresponding sales records as complete by setting the mdm_complete flag to TRUE. 
