@@ -14,7 +14,8 @@ Note: The solution focuses on the customer and sales tables for simplicity, so y
 
 The Master Data Management (MDM) process for the Orders system is designed to cleanse, match, and consolidate customer and sales data to ensure a single, accurate view of customer information. The process is broken down into several key steps, each supported by specific stored procedures and data flows, as depicted in the flowchart.
 
-![image](https://github.com/user-attachments/assets/9afc55cb-e952-42ef-b5d0-c83f6bff3983)
+![image](https://github.com/user-attachments/assets/d085202e-db06-4ace-804d-01c5fc6feafd)
+
 
 ### 1. Data Import and Initial Cleansing
 - **Staging Tables**: Data is initially loaded into staging tables (`stg_customer`, `stg_product`, `stg_sales`, `stg_supplier`) using the database’s native import functionality.
