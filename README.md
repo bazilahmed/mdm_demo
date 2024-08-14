@@ -29,12 +29,11 @@ Ensure that the database schema is properly set up by running the first script b
 
 
 **1. 01_create_tables_and_views.sql**
-    **Purpose:**
+   **Purpose:**
     This script is responsible for setting up the initial database schema, including the creation of all necessary tables and views for the project. Run this script first to ensure that all required database objects are created before executing any stored procedures. There were some special considerations to accommodate delta load logics and cyclic nature of MDM process. For example, almost all tables have created_date and updated_date column which is used for delta load logic. There are boolean flag columns like mdm_complete and to_be_merged added to address special scenarios and edge cases. Although only customer and sales tables are used to implement the MDM process, it should serve as an example to implement similar logic for product and supplier tables. 
-    
-    **Contents:**
-    Creates tables: stg_customer, stg_product, stg_supplier, stg_sales, customer, product, supplier, sales, potential_matches_customer, customer_master, sales_post_mdm.
-    Defines view potential_matches_customer_vw to facilitate the Master Data Management (MDM) process.
+       
+   **Contents:**
+   Creates tables: stg_customer, stg_product, stg_supplier, stg_sales, customer, product, supplier, sales, potential_matches_customer, customer_master, sales_post_mdm. Defines view potential_matches_customer_vw to facilitate the Master Data Management (MDM) process.
 
 
 **2. 02_create_sp_cleanse_and_load_table.sql**
