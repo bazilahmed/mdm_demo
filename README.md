@@ -25,36 +25,16 @@ The Master Data Management (MDM) process for the Orders system is designed to cl
 ### 2. Matching Process
 - **Finding Potential Matches**: The `find_potential_matches_customer` stored procedure is executed to identify potential duplicate customer records. This process uses predefined matching rules, including exact matches and fuzzy matches, and stores the results in the `potential_matches_customer` table.
 - **Manual Review and Exclusion**: The `potential_matches_customer_vw` view provides a user-friendly interface for reviewing potential matches. If certain records are found to be incorrect matches, the `flag_to_be_merged_false` procedure can be used to flag them as `to_be_merged = FALSE`, excluding them from the merging process.
-
-- 	Rule Number	Logic
-	1	(
-		EXACT first_name
-		AND EXACT last_name
-		)
-		AND EXACT email_address
-	2	(
-		EXACT first_name
-		OR
-		EXACT last_name 
-		)
-		AND
-		(
-		EXACT email_address
-		OR EXACT date_of_birth
-		)
-	3	EXACT first_name
-		AND
-		(
-		EXACT phone_number
-		OR EXACT address)
-	4	FUZZY first_name AND FUZZY last_name
-Threshold: 80%
+- **Matching Rules**: Customer
 ![image](https://github.com/user-attachments/assets/4b0ab63a-0dea-40ba-94ab-ffafb8203cd2)
 
 
 ### 3. Merging Process
 - **Applying Survivorship Rules**: The `run_survivorship_for_all` stored procedure iterates through all identified matches, applying survivorship rules via the `apply_survivorship_rules` procedure. These rules determine the "golden" customer record, which is then stored in the `customer_master` table.
 - **Finalizing Records**: The procedure also inserts any unmatched customer records directly into the `customer_master` table and updates the `mdm_complete` flag in the `customer` table to `TRUE` for all processed records.
+- **Survivorship Rules**: Customer
+![image](https://github.com/user-attachments/assets/fcdd36e3-3dc0-40e0-8f14-83ab3573e1fd)
+
 
 ### 4. Post-MDM Sales Data Integration
 - **Sales Data Update**: The `populate_sales_post_mdm` stored procedure is executed to update the `sales_post_mdm` table. This procedure links the sales data to the correct customer records using the `customer_master` table. The `mdm_complete` flag in the `sales` table is then set to `TRUE` for all processed records, ensuring that they are not reprocessed in future MDM runs.
