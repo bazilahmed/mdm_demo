@@ -65,21 +65,32 @@ Ensure that the database schema is properly set up by running the first script b
 ### Steps
 
 Prerequisite: Postgresql database is installed and the server is running locally. [Download and installation details](https://www.postgresql.org/download/)
+
               I faced server issue on Mac ARM version and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) helped me fix it. 
 
 **Step 1:** Run all SQL scripts in sequence
+
 **Step 2:** Import mock data from ./Data folder into respective staging tables using database native import feature
+
 **Step 3:** Run `cleanse_and_load_table` stored proc for `stg_customer` and `stg_sales` tables
+
 **Step 4:** Run `find_potential_matches_customer` stored proc 
+
 **Step 5:** View results from `potential_matces_customer_vw` for manual review
+
 **Step 6:** Run `flag_to_be_merged_false` stored proc for specific records that you do not want to be merged
+
 **Step 7:** Run `run_survivorship_for_all` stored proc
+
 **Step 8:** Review updated `customer_master` table
+
 **Step 9:** Run `populate_sales_post_mdm` stored proc
+
 **Step 10:** Review results in `sales_post_mdm` table
+
 **Step 11 (Optional)**: You can manually insert new records into `stg_customer` and `stg_sales` tables and repeat all the steps to see how the MDM process works with delta load.
 
-
+---
 
 ### SQL Scripts Description
 
