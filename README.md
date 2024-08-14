@@ -2,7 +2,7 @@ MDM Solution that is built on purely SQL on Postgresql database. Enjoy a working
 
 
 
-## SQL Scripts Overview
+## SQL Scripts Details
 
 This project contains several SQL scripts to set up and manage the Master Data Management (MDM) process. Below is a summary of each script:
 
