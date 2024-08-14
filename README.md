@@ -68,6 +68,8 @@ Prerequisite: Postgresql database is installed and the server is running locally
 
 _I faced a server issue on my Mac (ARM version) and this [post](https://stackoverflow.com/questions/39710384/cannot-connect-to-postgres-server-running-through-brew-services) helped me fix it._
 
+**Step 0:** Connect to this locally running Postgres server using any Database Management Tool of your choice. Create a database `mdm_demo` and connect to it. 
+
 **Step 1:** Run all SQL scripts in sequence
 
 **Step 2:** Import mock data from ./Data folder into respective staging tables using database native import feature
